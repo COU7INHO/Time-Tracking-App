@@ -39,12 +39,3 @@ It’s designed to be lightweight but practical — ideal for anyone who needs t
 |------------------|
 | ![Log Time](images/log_time_page.png) |
 
-## ⚡ Installation
-
-This project uses **[uv](https://github.com/astral-sh/uv)**, a super fast Python package manager.  
-It’s recommended over `pip` for faster installs and better dependency management.  
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/your-username/track_time_app.git
-cd track_time_app

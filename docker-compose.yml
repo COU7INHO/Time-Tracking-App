@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    volumes:
+      - .:/app
+    networks:
+      - app_net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    networks:
+      - app_net
+    depends_on:
+      - backend
+
+networks:
+  app_net:
+    driver: bridge

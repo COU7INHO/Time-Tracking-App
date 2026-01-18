@@ -1,5 +1,6 @@
 
-BASE_URL = "http://localhost"
+#BASE_URL = "http://localhost"
+BASE_URL = "http://backend"
 BACKEND_PORT = "8000"
 BACKEND_URL = BASE_URL + ":" + BACKEND_PORT
 AUTH_BASE_URL = BACKEND_URL + "/auth"

@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+WORKDIR /app
+# Instala o 'uv' para lidar com o teu uv.lock e pyproject.toml
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen
+COPY . .
+# O Django corre na 8000
+CMD ["uv", "run", "python", "djangoprj/manage.py", "runserver", "0.0.0.0:8000"]

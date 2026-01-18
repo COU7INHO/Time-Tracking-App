@@ -1,8 +1,14 @@
 FROM python:3.11-slim
 WORKDIR /app
+
+# Instala dependências de compilação
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 COPY . .
-# O Streamlit corre na 8501 por padrão
 CMD ["uv", "run", "streamlit", "run", "frontend/main.py", "--server.address=0.0.0.0"]

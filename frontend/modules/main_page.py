@@ -81,16 +81,40 @@ def display_dashboard(token):
     else:
         st.subheader("Hours Summary per Project (All Time)")
 
-    # Format total_hours for display
-    df_display = df.copy()
-    df_display['total_hours'] = df_display['total_hours'].apply(lambda x: f"{x:.2f} h")
-    df_display.columns = ['Project', 'Total Hours']
+    # Display table without pyarrow using markdown
+    table_html = "<table style='width:100%; border-collapse: collapse;'>"
+    table_html += "<thead><tr style='background-color: #f0f2f6;'>"
+    table_html += "<th style='padding: 12px; text-align: left; border-bottom: 2px solid #ddd;'>Project</th>"
+    table_html += "<th style='padding: 12px; text-align: left; border-bottom: 2px solid #ddd;'>Total Hours</th>"
+    table_html += "</tr></thead><tbody>"
 
-    st.table(df_display)
+    for _, row in df.iterrows():
+        table_html += "<tr style='border-bottom: 1px solid #ddd;'>"
+        table_html += f"<td style='padding: 12px;'>{row['name']}</td>"
+        table_html += f"<td style='padding: 12px;'>{row['total_hours']:.2f} h</td>"
+        table_html += "</tr>"
+
+    table_html += "</tbody></table>"
+    st.markdown(table_html, unsafe_allow_html=True)
 
     st.divider()
     if not df_chart.empty:
-        st.bar_chart(df_chart.set_index('name')['total_hours'], y_label="Total hours")
+        # Display bar chart using HTML/CSS without pyarrow
+        max_hours = df_chart['total_hours'].max()
+        chart_html = "<div style='margin-top: 20px;'>"
+        chart_html += "<p style='font-weight: bold; margin-bottom: 10px;'>Total hours</p>"
+
+        for _, row in df_chart.iterrows():
+            percentage = (row['total_hours'] / max_hours * 100) if max_hours > 0 else 0
+            chart_html += f"<div style='margin-bottom: 10px;'>"
+            chart_html += f"<div style='font-size: 14px; margin-bottom: 5px;'>{row['name']}</div>"
+            chart_html += f"<div style='background-color: #f0f2f6; border-radius: 5px; overflow: hidden;'>"
+            chart_html += f"<div style='background-color: #ff4b4b; height: 30px; width: {percentage}%; display: flex; align-items: center; padding-left: 10px; color: white; font-weight: bold; min-width: 60px;'>"
+            chart_html += f"{row['total_hours']:.2f}h"
+            chart_html += "</div></div></div>"
+
+        chart_html += "</div>"
+        st.markdown(chart_html, unsafe_allow_html=True)
     else:
         st.info("No projects have logged hours to display in the chart for the selected period.")
     st.divider()

@@ -81,15 +81,12 @@ def display_dashboard(token):
     else:
         st.subheader("Hours Summary per Project (All Time)")
 
-    st.dataframe(
-        df,
-        column_config={
-            "name": "Project",
-            "total_hours": st.column_config.NumberColumn("Total Hours", format="%.2f h"),
-        },
-        hide_index=True,
-        use_container_width=True
-    )
+    # Format total_hours for display
+    df_display = df.copy()
+    df_display['total_hours'] = df_display['total_hours'].apply(lambda x: f"{x:.2f} h")
+    df_display.columns = ['Project', 'Total Hours']
+
+    st.table(df_display)
 
     st.divider()
     if not df_chart.empty:
